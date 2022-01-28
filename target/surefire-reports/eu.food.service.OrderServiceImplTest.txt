@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: eu.food.service.OrderServiceImplTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.506 s - in eu.food.service.OrderServiceImplTest

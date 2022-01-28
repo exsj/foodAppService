@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ProductServiceImpl.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">foodapp</a> &gt; <a href="index.source.html" class="el_package">eu.food.service.impl</a> &gt; <span class="el_source">ProductServiceImpl.java</span></div><h1>ProductServiceImpl.java</h1><pre class="source lang-java linenums">package eu.food.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import eu.food.dto.ProductDto;
+import eu.food.entity.Product;
+import eu.food.model.Constants;
+import eu.food.model.ResponseBody;
+import eu.food.repository.ProductRepository;
+import eu.food.service.ProductService;
+import eu.food.utils.Utils;
+
+@Service
+<span class="fc" id="L22">public class ProductServiceImpl implements ProductService {</span>
+
+	@Autowired
+	ProductRepository productRepository;
+
+	@Override
+	public ResponseEntity&lt;ResponseBody&gt; search(String textInput) {
+<span class="fc" id="L29">		ResponseBody responseBody = new ResponseBody();</span>
+		
+<span class="fc bfc" id="L31" title="All 2 branches covered.">		if (StringUtils.isBlank(textInput)) {</span>
+<span class="fc" id="L32">			responseBody.setMessage(Constants.TEXT_INPUT_NULL);</span>
+<span class="fc" id="L33">			return Utils.makeStatus(responseBody, HttpStatus.BAD_REQUEST);</span>
+		}
+		
+<span class="fc" id="L36">		List&lt;Product&gt; productList = productRepository.getAllProductsSearch(textInput);</span>
+<span class="fc" id="L37">		List&lt;ProductDto&gt; productDtoList = new ArrayList&lt;&gt;();</span>
+		
+<span class="fc" id="L39">		productList.forEach(elem -&gt; {</span>
+			ProductDto productDto = new ProductDto();
+			BeanUtils.copyProperties(elem, productDto);
+			productDto.setVendorName(elem.getVendor().getName());
+			productDtoList.add(productDto);
+		});
+		
+<span class="fc bfc" id="L46" title="All 2 branches covered.">		if (productList.isEmpty()) {</span>
+<span class="fc" id="L47">			responseBody.setMessage(Constants.NO_PRODUCTS);</span>
+		} else {
+<span class="fc" id="L49">			responseBody.setListOfProducts(productDtoList);</span>
+<span class="fc" id="L50">			responseBody.setTotalRecords(productDtoList.size());</span>
+		}
+		
+<span class="fc" id="L53">		return Utils.makeStatus(responseBody, HttpStatus.OK);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
